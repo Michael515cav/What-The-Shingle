@@ -21,29 +21,27 @@
   main { max-width: 860px; margin: 0 auto; padding: 32px 18px 60px; display: flex; flex-direction: column; gap: 18px; }
   .screen { display: none; flex-direction: column; gap: 16px; }
   .screen.active { display: flex; }
+
   #uploadArea { background: var(--white); border: 2px dashed var(--cream-dark); border-radius: 12px; padding: 56px 24px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; display: block; }
   #uploadArea:hover { border-color: var(--gold); background: #fffdf7; }
   .upload-icon { width: 54px; height: 54px; margin: 0 auto 14px; background: var(--cream); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
   .upload-icon svg { width: 26px; height: 26px; stroke: var(--gold); fill: none; }
   .upload-title { font-family: 'DM Serif Display', serif; font-size: 1.35rem; color: var(--slate); margin-bottom: 8px; }
   .upload-sub { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
-  .preview-card { background: var(--white); border-radius: 12px; overflow: hidden; display: flex; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
-  .preview-img-col { width: 230px; flex-shrink: 0; background: var(--slate-mid); display: flex; align-items: center; justify-content: center; padding: 16px; }
-  .preview-img-col img { width: 100%; max-height: 190px; object-fit: contain; border-radius: 5px; }
-  .preview-info-col { flex: 1; padding: 26px; display: flex; flex-direction: column; gap: 12px; justify-content: center; }
-  .preview-info-col h3 { font-family: 'DM Serif Display', serif; font-size: 1.15rem; }
-  .preview-info-col p { font-size: 0.85rem; color: var(--muted); }
-  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
-  .btn-gold { display: inline-flex; align-items: center; gap: 8px; background: var(--gold); color: var(--slate); border: none; border-radius: 8px; padding: 12px 22px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.88rem; cursor: pointer; transition: background 0.2s; }
-  .btn-gold:hover { background: var(--gold-light); }
-  .btn-ghost { display: inline-flex; align-items: center; background: none; color: var(--muted); border: 1px solid var(--cream-dark); border-radius: 8px; padding: 12px 18px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
-  .btn-ghost:hover { border-color: var(--slate-light); color: var(--slate); }
-  .error-box { background: #fff5f5; border: 1px solid rgba(192,57,43,0.25); border-radius: 9px; padding: 16px 20px; color: var(--red); font-size: 0.875rem; line-height: 1.55; }
-  .loading-card { background: var(--white); border-radius: 12px; padding: 52px 24px; text-align: center; }
-  .spinner { width: 38px; height: 38px; border: 3px solid var(--cream-dark); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 14px; }
+
+  .loading-card { background: var(--white); border-radius: 12px; padding: 52px 24px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .spinner { width: 42px; height: 42px; border: 3px solid var(--cream-dark); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 18px; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-label { font-family: 'DM Serif Display', serif; font-size: 1.05rem; }
-  .loading-sub { font-size: 0.78rem; color: var(--muted); margin-top: 5px; }
+  .loading-label { font-family: 'DM Serif Display', serif; font-size: 1.15rem; margin-bottom: 6px; }
+  .loading-sub { font-size: 0.82rem; color: var(--muted); }
+  .progress-steps { margin-top: 24px; display: flex; flex-direction: column; gap: 8px; max-width: 320px; margin-left: auto; margin-right: auto; }
+  .progress-step { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; color: var(--muted); }
+  .progress-step.done { color: var(--green); }
+  .progress-step.active { color: var(--slate); font-weight: 600; }
+  .step-icon { width: 20px; height: 20px; border-radius: 50%; border: 2px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; flex-shrink: 0; }
+  .progress-step.done .step-icon { background: var(--green); border-color: var(--green); color: white; }
+  .progress-step.active .step-icon { border-color: var(--gold); }
+
   .result-header { background: var(--slate); border-radius: 12px; padding: 26px 28px; display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
   .r-name { font-family: 'DM Serif Display', serif; font-size: 1.65rem; color: var(--white); line-height: 1.2; }
   .r-mfr { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
@@ -60,6 +58,10 @@
   .status-badge.active .status-dot { background: #4caf76; }
   .status-badge.discontinued .status-dot { background: #e05c4a; }
   .status-badge.limited .status-dot { background: var(--gold-light); }
+
+  .identified-from { background: var(--slate-mid); border-radius: 9px; padding: 13px 16px; font-size: 0.8rem; color: #aab8c4; line-height: 1.5; }
+  .identified-from strong { color: var(--gold); font-weight: 600; }
+
   .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 11px; }
   .info-card { background: var(--white); border-radius: 9px; padding: 15px 17px; border: 1px solid var(--cream-dark); }
   .info-label { font-size: 0.67rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 5px; }
@@ -76,7 +78,10 @@
   .alt-mfr { font-size: 0.75rem; color: var(--muted); }
   .alt-reason { font-size: 0.73rem; color: var(--muted); margin-top: 1px; }
   .alt-avail { font-size: 0.73rem; font-weight: 600; color: var(--green); margin-left: auto; flex-shrink: 0; }
-  @media (max-width: 560px) { .preview-card { flex-direction: column; } .preview-img-col { width: 100%; height: 170px; } .result-header { flex-direction: column; } }
+  .error-box { background: #fff5f5; border: 1px solid rgba(192,57,43,0.25); border-radius: 9px; padding: 16px 20px; color: var(--red); font-size: 0.875rem; line-height: 1.55; }
+  .btn-ghost { display: inline-flex; align-items: center; gap: 6px; background: none; color: var(--muted); border: 1px solid var(--cream-dark); border-radius: 8px; padding: 11px 18px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; transition: border-color 0.2s, color 0.2s; margin-top: 4px; }
+  .btn-ghost:hover { border-color: var(--slate-light); color: var(--slate); }
+  @media (max-width: 560px) { .result-header { flex-direction: column; } }
 </style>
 </head>
 <body>
@@ -93,6 +98,7 @@
   </div>
 </header>
 <main>
+
   <div id="sUpload" class="screen active">
     <label id="uploadArea" for="fileInput">
       <div class="upload-icon">
@@ -101,37 +107,29 @@
           <polyline points="21 15 16 10 5 21"/>
         </svg>
       </div>
-      <div class="upload-title">Click to upload a shingle photo</div>
-      <div class="upload-sub">JPG or PNG recommended · HEIC will be converted automatically</div>
+      <div class="upload-title">Upload a shingle photo</div>
+      <div class="upload-sub">JPG, PNG, or HEIC · Google Vision + AI identifies it automatically</div>
     </label>
     <input type="file" id="fileInput" accept="image/*,.heic,.heif" style="display:none">
     <div id="upErr" class="error-box" style="display:none"></div>
   </div>
 
-  <div id="sPreview" class="screen">
-    <div class="preview-card">
-      <div class="preview-img-col"><img id="previewImg" src="" alt="Shingle"></div>
-      <div class="preview-info-col">
-        <h3>Ready to identify</h3>
-        <p id="previewNote">Photo loaded. Hit identify to run AI analysis.</p>
-        <div class="btn-row">
-          <button class="btn-gold" id="analyzeBtn">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            Identify Shingle
-          </button>
-          <label class="btn-ghost" for="fileInput2" style="cursor:pointer;">Change photo</label>
-          <input type="file" id="fileInput2" accept="image/*,.heic,.heif" style="display:none">
-        </div>
-      </div>
-    </div>
-    <div id="prevErr" class="error-box" style="display:none"></div>
-  </div>
-
   <div id="sLoading" class="screen">
     <div class="loading-card">
       <div class="spinner"></div>
-      <div class="loading-label">Analyzing your shingle…</div>
-      <div class="loading-sub">Checking manufacturer databases and product history</div>
+      <div class="loading-label" id="loadingLabel">Analyzing photo…</div>
+      <div class="loading-sub" id="loadingSub">This takes about 5 seconds</div>
+      <div class="progress-steps">
+        <div class="progress-step" id="step1">
+          <div class="step-icon">1</div> Sending to Google Vision API
+        </div>
+        <div class="progress-step" id="step2">
+          <div class="step-icon">2</div> Identifying shingle from web matches
+        </div>
+        <div class="progress-step" id="step3">
+          <div class="step-icon">3</div> Researching specs &amp; availability
+        </div>
+      </div>
     </div>
   </div>
 
@@ -141,20 +139,23 @@
         <div class="r-name" id="rName"></div>
         <div class="r-mfr" id="rMfr"></div>
         <div class="conf-row">
-          <span class="conf-label">Match confidence</span>
+          <span class="conf-label">Confidence</span>
           <div class="conf-track"><div class="conf-fill" id="confFill"></div></div>
           <span class="conf-pct" id="confPct"></span>
         </div>
       </div>
       <div id="statusBadge" class="status-badge"></div>
     </div>
+    <div class="identified-from" id="identifiedFrom" style="display:none">
+      <strong>Identified via:</strong> <span id="identifiedFromText"></span>
+    </div>
     <div class="info-grid" id="infoGrid"></div>
     <div class="notes-card" id="notesCard" style="display:none"><h4>Field Notes</h4><p id="notesText"></p></div>
     <div class="alt-card" id="altCard" style="display:none"><h4>Compatible Alternatives</h4><div id="altList"></div></div>
-    <button class="btn-ghost" id="resetBtn" style="margin-top:4px;">← Analyze another shingle</button>
+    <button class="btn-ghost" id="resetBtn">← Analyze another shingle</button>
   </div>
-</main>
 
+</main>
 <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
 <script>
 let b64 = null;
@@ -164,32 +165,36 @@ function show(id) {
   document.getElementById(id).classList.add('active');
 }
 
+function setStep(n) {
+  [1,2,3].forEach(i => {
+    const el = document.getElementById('step' + i);
+    el.classList.remove('done','active');
+    if (i < n) { el.classList.add('done'); el.querySelector('.step-icon').textContent = '✓'; }
+    else if (i === n) { el.classList.add('active'); }
+  });
+}
+
 async function loadFile(file) {
   if (!file) return;
   document.getElementById('upErr').style.display = 'none';
   const name = file.name.toLowerCase();
   const isHeic = name.endsWith('.heic') || name.endsWith('.heif') || file.type === 'image/heic' || file.type === 'image/heif';
-
   let blob = file;
   if (isHeic) {
-    document.getElementById('previewNote').textContent = 'Converting HEIC…';
-    show('sPreview');
     try {
       blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
       if (Array.isArray(blob)) blob = blob[0];
     } catch(e) {
-      document.getElementById('upErr').textContent = 'HEIC conversion failed. Please send the photo to yourself via email and save it as JPG.';
+      document.getElementById('upErr').textContent = 'HEIC conversion failed. Please convert to JPG first.';
       document.getElementById('upErr').style.display = 'block';
-      show('sUpload');
       return;
     }
   }
-
   const reader = new FileReader();
   reader.onload = ev => {
     const img = new Image();
     img.onload = () => {
-      const MAX = 1024;
+      const MAX = 1200;
       let w = img.width, h = img.height;
       if (w > MAX || h > MAX) {
         if (w >= h) { h = Math.round(h * MAX / w); w = MAX; }
@@ -198,72 +203,59 @@ async function loadFile(file) {
       const cv = document.createElement('canvas');
       cv.width = w; cv.height = h;
       cv.getContext('2d').drawImage(img, 0, 0, w, h);
-      const url = cv.toDataURL('image/jpeg', 0.85);
-      b64 = url.split(',')[1];
-      document.getElementById('previewImg').src = url;
-      document.getElementById('previewNote').textContent = 'Photo loaded. Hit identify to run AI analysis.';
-      document.getElementById('prevErr').style.display = 'none';
-      show('sPreview');
+      b64 = cv.toDataURL('image/jpeg', 0.85).split(',')[1];
+      runPipeline();
     };
     img.src = ev.target.result;
   };
   reader.readAsDataURL(blob);
 }
 
-document.getElementById('fileInput').addEventListener('change', function() { if(this.files[0]) loadFile(this.files[0]); this.value=''; });
-document.getElementById('fileInput2').addEventListener('change', function() { if(this.files[0]) loadFile(this.files[0]); this.value=''; });
-document.getElementById('resetBtn').addEventListener('click', () => { b64 = null; show('sUpload'); });
-
-document.getElementById('analyzeBtn').addEventListener('click', async () => {
-  if (!b64) return;
+async function runPipeline() {
   show('sLoading');
-  const sys = `You are the world's foremost expert on roofing shingles with 30+ years identifying every product ever manufactured by GAF, Owens Corning, CertainTeed, Tamko, IKO, Atlas, Malarkey, and all other manufacturers. You have memorized every shingle product line, color, texture pattern, shadow line, granule blend, cutout style, and tab shape ever produced.
-
-When given a photo, perform a deep forensic visual analysis BEFORE identifying. Examine:
-1. TAB STYLE — 3-tab, architectural/laminate, designer, shake-style, hip & ridge. Look at the bottom edge cutout pattern precisely.
-2. SHADOW LINE — the raised laminate section: its height, width, shape, and pattern are manufacturer fingerprints. GAF Timberline has a specific shadow line distinct from Owens Corning Duration.
-3. GRANULE COLOR & BLEND — the exact color mix, whether it has algae-resistant lighter granules mixed in, copper granules, or a blended multi-tone pattern.
-4. TEXTURE PATTERN — the specific wood-shake simulation pattern, the size and distribution of the aggregate texture.
-5. DIMENSIONS & EXPOSURE — estimate the tab width, shingle height, and exposure from visual proportions.
-6. LAYERING THICKNESS — how thick does the laminate layer appear? Premium lines like GAF Timberline HD vs HDZ vs American Harvest have distinct thicknesses.
-7. COLOR NAME CLUES — certain color blends are highly specific: "Charcoal" vs "Pewter Gray" vs "Weathered Wood" have distinct granule patterns.
-8. INSTALLATION PATTERN — the reveal pattern and how shingles overlap can indicate the product line.
-9. AGE INDICATORS — granule loss, color fading, moss, cracking help narrow the era of manufacture.
-10. ANY VISIBLE BRANDING — look extremely carefully for any partial manufacturer marks, color name prints on the back tab, or product line stamps.
-
-After this analysis, cross-reference against your complete mental database of every shingle ever made. Be specific — do not just say "architectural shingle," identify the exact product line and color if at all possible. If you are not sure between two products, list both in alternatives with your reasoning.
-
-Set confidence honestly: 90+ only if you can see clear distinguishing features. 70-89 for a strong likely match. Below 70 if the photo is unclear or multiple products match.
-
-Respond ONLY with a raw JSON object. No markdown, no backticks, no text before or after. Just JSON.
-
-Schema: { "productName": string, "manufacturer": string, "colorStyle": string, "shingleType": string, "material": string, "dimensions": string or null, "warrantyOriginal": string or null, "weightPerSquare": string or null, "windRating": string or null, "fireRating": string or null, "availability": "active" or "discontinued" or "limited", "discontinuedYear": string or null, "whereToBuy": string, "confidence": number, "visualAnalysis": string (2-3 sentences describing exactly what visual features you used to identify this), "fieldNotes": string, "alternatives": [{"productName": string, "manufacturer": string, "reason": string, "colorHex": string, "available": boolean}] }`;
+  setStep(1);
 
   try {
-    const res = await fetch('/api/identify', {
+    // STEP 1: Google Vision
+    document.getElementById('loadingLabel').textContent = 'Scanning with Google Vision…';
+    document.getElementById('loadingSub').textContent = 'Finding web matches for your shingle';
+    const visionRes = await fetch('/api/identify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514', max_tokens: 1500, system: sys,
-        messages: [{ role: 'user', content: [
-          { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } },
-          { type: 'text', text: 'Perform a full forensic visual analysis of this shingle photo and identify the exact product. Return only the JSON object.' }
-        ]}]
-      })
+      body: JSON.stringify({ mode: 'vision', image: b64 })
     });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
-    const text = (data.content || []).map(b => b.text || '').join('').trim();
-    const m = text.match(/\{[\s\S]*\}/);
-    if (!m) throw new Error('No JSON in response');
-    render(JSON.parse(m[0]));
+    const visionData = await visionRes.json();
+    if (visionData.error) throw new Error('Vision API: ' + visionData.error.message);
+
+    // STEP 2: Claude research
+    setStep(2);
+    document.getElementById('loadingLabel').textContent = 'Identifying shingle…';
+    document.getElementById('loadingSub').textContent = 'Matching against manufacturer database';
+    await new Promise(r => setTimeout(r, 400));
+
+    setStep(3);
+    document.getElementById('loadingLabel').textContent = 'Pulling full specs…';
+    document.getElementById('loadingSub').textContent = 'Checking availability, warranty, and alternatives';
+
+    const claudeRes = await fetch('/api/identify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode: 'research', shingleName: visionData })
+    });
+    const result = await claudeRes.json();
+    if (result.error) throw new Error('Research: ' + result.error.message);
+
+    render(result);
+
   } catch(e) {
-    show('sPreview');
-    const eb = document.getElementById('prevErr');
-    eb.textContent = 'Error: ' + e.message;
-    eb.style.display = 'block';
+    show('sUpload');
+    document.getElementById('upErr').textContent = 'Error: ' + e.message;
+    document.getElementById('upErr').style.display = 'block';
   }
-});
+}
+
+document.getElementById('fileInput').addEventListener('change', function() { if(this.files[0]) loadFile(this.files[0]); this.value=''; });
+document.getElementById('resetBtn').addEventListener('click', () => { b64 = null; show('sUpload'); });
 
 function render(r) {
   document.getElementById('rName').textContent = r.productName || 'Unknown';
@@ -271,28 +263,35 @@ function render(r) {
   const conf = Math.min(100, Math.max(0, +r.confidence || 0));
   setTimeout(() => document.getElementById('confFill').style.width = conf + '%', 80);
   document.getElementById('confPct').textContent = conf + '%';
+
   const av = (r.availability || 'active').toLowerCase();
   const badge = document.getElementById('statusBadge');
   badge.className = 'status-badge ' + (av === 'discontinued' ? 'discontinued' : av === 'limited' ? 'limited' : 'active');
   badge.innerHTML = `<span class="status-dot"></span>${av === 'discontinued' ? 'Discontinued' : av === 'limited' ? 'Limited' : 'Available'}`;
+
+  if (r.identifiedFrom) {
+    document.getElementById('identifiedFromText').textContent = r.identifiedFrom;
+    document.getElementById('identifiedFrom').style.display = 'block';
+  } else document.getElementById('identifiedFrom').style.display = 'none';
+
   const grid = document.getElementById('infoGrid');
   grid.innerHTML = '';
-  [['Color / Style',r.colorStyle],['Type',r.shingleType],['Material',r.material],['Dimensions',r.dimensions],
-   ['Warranty',r.warrantyOriginal],['Weight / Square',r.weightPerSquare],['Wind Rating',r.windRating],
-   ['Fire Rating',r.fireRating],['Where to Buy',r.whereToBuy],['Disc. Year',r.discontinuedYear]
-  ].forEach(([l,v]) => {
-    if (!v || v==='null') return;
+  [
+    ['Color / Style', r.colorStyle], ['Type', r.shingleType], ['Material', r.material],
+    ['Dimensions', r.dimensions], ['Warranty', r.warrantyOriginal], ['Weight / Square', r.weightPerSquare],
+    ['Wind Rating', r.windRating], ['Fire Rating', r.fireRating], ['Price / Square', r.pricePerSquare],
+    ['Where to Buy', r.whereToBuy], ['Discontinued', r.discontinuedYear], ['Replaced By', r.replacedBy]
+  ].forEach(([l, v]) => {
+    if (!v || v === 'null') return;
     const d = document.createElement('div'); d.className = 'info-card';
     d.innerHTML = `<div class="info-label">${l}</div><div class="info-val">${v}</div>`;
     grid.appendChild(d);
   });
+
   const nc = document.getElementById('notesCard');
-  if (r.visualAnalysis || r.fieldNotes) {
-    document.getElementById('notesText').innerHTML =
-      (r.visualAnalysis ? '<strong>Visual analysis:</strong> ' + r.visualAnalysis + '<br><br>' : '') +
-      (r.fieldNotes || '');
-    nc.style.display = 'block';
-  } else nc.style.display = 'none';
+  if (r.fieldNotes) { document.getElementById('notesText').textContent = r.fieldNotes; nc.style.display = 'block'; }
+  else nc.style.display = 'none';
+
   const ac = document.getElementById('altCard'), al = document.getElementById('altList');
   al.innerHTML = '';
   if (r.alternatives && r.alternatives.length) {
@@ -305,6 +304,7 @@ function render(r) {
     });
     ac.style.display = 'block';
   } else ac.style.display = 'none';
+
   show('sResults');
 }
 </script>
