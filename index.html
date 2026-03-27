@@ -217,18 +217,37 @@ document.getElementById('resetBtn').addEventListener('click', () => { b64 = null
 document.getElementById('analyzeBtn').addEventListener('click', async () => {
   if (!b64) return;
   show('sLoading');
-  const sys = `You are an expert roofing material specialist. Identify the shingle and respond ONLY with a raw JSON object. No markdown, no backticks, no text before or after.
-Schema: { "productName": string, "manufacturer": string, "colorStyle": string, "shingleType": string, "material": string, "dimensions": string or null, "warrantyOriginal": string or null, "weightPerSquare": string or null, "windRating": string or null, "fireRating": string or null, "availability": "active" or "discontinued" or "limited", "discontinuedYear": string or null, "whereToBuy": string, "confidence": number, "fieldNotes": string, "alternatives": [{"productName": string, "manufacturer": string, "reason": string, "colorHex": string, "available": boolean}] }`;
+  const sys = `You are the world's foremost expert on roofing shingles with 30+ years identifying every product ever manufactured by GAF, Owens Corning, CertainTeed, Tamko, IKO, Atlas, Malarkey, and all other manufacturers. You have memorized every shingle product line, color, texture pattern, shadow line, granule blend, cutout style, and tab shape ever produced.
+
+When given a photo, perform a deep forensic visual analysis BEFORE identifying. Examine:
+1. TAB STYLE — 3-tab, architectural/laminate, designer, shake-style, hip & ridge. Look at the bottom edge cutout pattern precisely.
+2. SHADOW LINE — the raised laminate section: its height, width, shape, and pattern are manufacturer fingerprints. GAF Timberline has a specific shadow line distinct from Owens Corning Duration.
+3. GRANULE COLOR & BLEND — the exact color mix, whether it has algae-resistant lighter granules mixed in, copper granules, or a blended multi-tone pattern.
+4. TEXTURE PATTERN — the specific wood-shake simulation pattern, the size and distribution of the aggregate texture.
+5. DIMENSIONS & EXPOSURE — estimate the tab width, shingle height, and exposure from visual proportions.
+6. LAYERING THICKNESS — how thick does the laminate layer appear? Premium lines like GAF Timberline HD vs HDZ vs American Harvest have distinct thicknesses.
+7. COLOR NAME CLUES — certain color blends are highly specific: "Charcoal" vs "Pewter Gray" vs "Weathered Wood" have distinct granule patterns.
+8. INSTALLATION PATTERN — the reveal pattern and how shingles overlap can indicate the product line.
+9. AGE INDICATORS — granule loss, color fading, moss, cracking help narrow the era of manufacture.
+10. ANY VISIBLE BRANDING — look extremely carefully for any partial manufacturer marks, color name prints on the back tab, or product line stamps.
+
+After this analysis, cross-reference against your complete mental database of every shingle ever made. Be specific — do not just say "architectural shingle," identify the exact product line and color if at all possible. If you are not sure between two products, list both in alternatives with your reasoning.
+
+Set confidence honestly: 90+ only if you can see clear distinguishing features. 70-89 for a strong likely match. Below 70 if the photo is unclear or multiple products match.
+
+Respond ONLY with a raw JSON object. No markdown, no backticks, no text before or after. Just JSON.
+
+Schema: { "productName": string, "manufacturer": string, "colorStyle": string, "shingleType": string, "material": string, "dimensions": string or null, "warrantyOriginal": string or null, "weightPerSquare": string or null, "windRating": string or null, "fireRating": string or null, "availability": "active" or "discontinued" or "limited", "discontinuedYear": string or null, "whereToBuy": string, "confidence": number, "visualAnalysis": string (2-3 sentences describing exactly what visual features you used to identify this), "fieldNotes": string, "alternatives": [{"productName": string, "manufacturer": string, "reason": string, "colorHex": string, "available": boolean}] }`;
 
   try {
     const res = await fetch('/api/identify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: sys,
+        model: 'claude-sonnet-4-20250514', max_tokens: 1500, system: sys,
         messages: [{ role: 'user', content: [
           { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } },
-          { type: 'text', text: 'Identify this shingle. Return only JSON.' }
+          { type: 'text', text: 'Perform a full forensic visual analysis of this shingle photo and identify the exact product. Return only the JSON object.' }
         ]}]
       })
     });
@@ -268,7 +287,12 @@ function render(r) {
     grid.appendChild(d);
   });
   const nc = document.getElementById('notesCard');
-  if (r.fieldNotes) { document.getElementById('notesText').textContent = r.fieldNotes; nc.style.display = 'block'; } else nc.style.display = 'none';
+  if (r.visualAnalysis || r.fieldNotes) {
+    document.getElementById('notesText').innerHTML =
+      (r.visualAnalysis ? '<strong>Visual analysis:</strong> ' + r.visualAnalysis + '<br><br>' : '') +
+      (r.fieldNotes || '');
+    nc.style.display = 'block';
+  } else nc.style.display = 'none';
   const ac = document.getElementById('altCard'), al = document.getElementById('altList');
   al.innerHTML = '';
   if (r.alternatives && r.alternatives.length) {
