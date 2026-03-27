@@ -10,11 +10,11 @@
     --slate: #1c2329; --slate-mid: #2d3a45; --slate-light: #3e5060;
     --gold: #c9a84c; --gold-light: #e2c97e;
     --cream: #f5f0e8; --cream-dark: #e8e0d0;
-    --white: #ffffff; --red: #c0392b; --green: #27ae60; --muted: #8a9aa8;
+    --white: #fff; --red: #c0392b; --green: #27ae60; --muted: #8a9aa8;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--slate); min-height: 100vh; }
-  header { background: var(--slate); padding: 20px 32px; display: flex; align-items: center; gap: 14px; border-bottom: 2px solid var(--gold); }
+  header { background: var(--slate); padding: 18px 32px; display: flex; align-items: center; gap: 14px; border-bottom: 2px solid var(--gold); }
   .brand-name { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--white); }
   .brand-name span { color: var(--gold); }
   .brand-tagline { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
@@ -22,28 +22,55 @@
   .screen { display: none; flex-direction: column; gap: 16px; }
   .screen.active { display: flex; }
 
-  #uploadArea { background: var(--white); border: 2px dashed var(--cream-dark); border-radius: 12px; padding: 56px 24px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; display: block; }
+  /* UPLOAD */
+  #uploadArea { background: var(--white); border: 2px dashed var(--cream-dark); border-radius: 12px; padding: 52px 24px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; display: block; }
   #uploadArea:hover { border-color: var(--gold); background: #fffdf7; }
   .upload-icon { width: 54px; height: 54px; margin: 0 auto 14px; background: var(--cream); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
   .upload-icon svg { width: 26px; height: 26px; stroke: var(--gold); fill: none; }
   .upload-title { font-family: 'DM Serif Display', serif; font-size: 1.35rem; color: var(--slate); margin-bottom: 8px; }
   .upload-sub { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+  .hint-row { display: flex; gap: 10px; align-items: center; }
+  .hint-input { flex: 1; padding: 11px 16px; border: 1px solid var(--cream-dark); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; color: var(--slate); background: var(--white); outline: none; transition: border-color 0.2s; }
+  .hint-input:focus { border-color: var(--gold); }
+  .hint-label { font-size: 0.78rem; color: var(--muted); margin-bottom: 6px; }
 
+  /* LOADING */
   .loading-card { background: var(--white); border-radius: 12px; padding: 52px 24px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
   .spinner { width: 42px; height: 42px; border: 3px solid var(--cream-dark); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 18px; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-label { font-family: 'DM Serif Display', serif; font-size: 1.15rem; margin-bottom: 6px; }
+  .loading-label { font-family: 'DM Serif Display', serif; font-size: 1.1rem; margin-bottom: 5px; }
   .loading-sub { font-size: 0.82rem; color: var(--muted); }
-  .progress-steps { margin-top: 24px; display: flex; flex-direction: column; gap: 8px; max-width: 320px; margin-left: auto; margin-right: auto; }
-  .progress-step { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; color: var(--muted); }
-  .progress-step.done { color: var(--green); }
-  .progress-step.active { color: var(--slate); font-weight: 600; }
-  .step-icon { width: 20px; height: 20px; border-radius: 50%; border: 2px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; flex-shrink: 0; }
-  .progress-step.done .step-icon { background: var(--green); border-color: var(--green); color: white; }
-  .progress-step.active .step-icon { border-color: var(--gold); }
 
-  .result-header { background: var(--slate); border-radius: 12px; padding: 26px 28px; display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
-  .r-name { font-family: 'DM Serif Display', serif; font-size: 1.65rem; color: var(--white); line-height: 1.2; }
+  /* CANDIDATES */
+  .candidates-header { display: flex; align-items: center; gap: 14px; }
+  .candidates-thumb { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; background: var(--slate-mid); flex-shrink: 0; }
+  .candidates-intro h2 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; margin-bottom: 4px; }
+  .candidates-intro p { font-size: 0.83rem; color: var(--muted); line-height: 1.5; }
+  .candidate-card { background: var(--white); border: 1.5px solid var(--cream-dark); border-radius: 12px; padding: 18px 20px; cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; display: flex; align-items: flex-start; gap: 14px; }
+  .candidate-card:hover { border-color: var(--gold); box-shadow: 0 2px 12px rgba(201,168,76,0.15); }
+  .candidate-card.rank1 { border-color: var(--gold); }
+  .cand-swatch { width: 44px; height: 44px; border-radius: 8px; flex-shrink: 0; border: 1px solid var(--cream-dark); }
+  .cand-body { flex: 1; }
+  .cand-rank { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 3px; }
+  .rank1 .cand-rank { color: var(--gold); }
+  .cand-name { font-weight: 600; font-size: 0.95rem; color: var(--slate); margin-bottom: 2px; }
+  .cand-mfr { font-size: 0.78rem; color: var(--muted); margin-bottom: 8px; }
+  .cand-reasoning { font-size: 0.8rem; color: var(--slate-light); line-height: 1.5; }
+  .cand-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+  .cand-conf { font-size: 0.82rem; font-weight: 600; color: var(--slate); }
+  .cand-conf-bar { width: 60px; height: 4px; background: var(--cream-dark); border-radius: 2px; overflow: hidden; }
+  .cand-conf-fill { height: 100%; background: var(--gold); border-radius: 2px; }
+  .cand-select-btn { background: var(--gold); color: var(--slate); border: none; border-radius: 6px; padding: 7px 14px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.78rem; cursor: pointer; white-space: nowrap; }
+  .cand-select-btn:hover { background: var(--gold-light); }
+  .none-of-these { text-align: center; font-size: 0.83rem; color: var(--muted); padding: 8px; }
+  .none-of-these a { color: var(--gold); cursor: pointer; text-decoration: underline; }
+
+  /* SPECS LOADING */
+  .specs-loading { background: var(--white); border-radius: 12px; padding: 40px 24px; text-align: center; }
+
+  /* RESULTS */
+  .result-header { background: var(--slate); border-radius: 12px; padding: 24px 28px; display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+  .r-name { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--white); line-height: 1.2; }
   .r-mfr { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
   .conf-row { margin-top: 12px; display: flex; align-items: center; gap: 10px; }
   .conf-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
@@ -58,10 +85,6 @@
   .status-badge.active .status-dot { background: #4caf76; }
   .status-badge.discontinued .status-dot { background: #e05c4a; }
   .status-badge.limited .status-dot { background: var(--gold-light); }
-
-  .identified-from { background: var(--slate-mid); border-radius: 9px; padding: 13px 16px; font-size: 0.8rem; color: #aab8c4; line-height: 1.5; }
-  .identified-from strong { color: var(--gold); font-weight: 600; }
-
   .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 11px; }
   .info-card { background: var(--white); border-radius: 9px; padding: 15px 17px; border: 1px solid var(--cream-dark); }
   .info-label { font-size: 0.67rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 5px; }
@@ -78,10 +101,10 @@
   .alt-mfr { font-size: 0.75rem; color: var(--muted); }
   .alt-reason { font-size: 0.73rem; color: var(--muted); margin-top: 1px; }
   .alt-avail { font-size: 0.73rem; font-weight: 600; color: var(--green); margin-left: auto; flex-shrink: 0; }
-  .error-box { background: #fff5f5; border: 1px solid rgba(192,57,43,0.25); border-radius: 9px; padding: 16px 20px; color: var(--red); font-size: 0.875rem; line-height: 1.55; }
-  .btn-ghost { display: inline-flex; align-items: center; gap: 6px; background: none; color: var(--muted); border: 1px solid var(--cream-dark); border-radius: 8px; padding: 11px 18px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; transition: border-color 0.2s, color 0.2s; margin-top: 4px; }
+  .error-box { background: #fff5f5; border: 1px solid rgba(192,57,43,0.25); border-radius: 9px; padding: 14px 18px; color: var(--red); font-size: 0.85rem; line-height: 1.55; }
+  .btn-ghost { display: inline-flex; align-items: center; gap: 6px; background: none; color: var(--muted); border: 1px solid var(--cream-dark); border-radius: 8px; padding: 10px 16px; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
   .btn-ghost:hover { border-color: var(--slate-light); color: var(--slate); }
-  @media (max-width: 560px) { .result-header { flex-direction: column; } }
+  @media (max-width: 560px) { .result-header { flex-direction: column; } .candidate-card { flex-wrap: wrap; } .cand-right { flex-direction: row; align-items: center; width: 100%; justify-content: space-between; } }
 </style>
 </head>
 <body>
@@ -99,6 +122,7 @@
 </header>
 <main>
 
+  <!-- UPLOAD -->
   <div id="sUpload" class="screen active">
     <label id="uploadArea" for="fileInput">
       <div class="upload-icon">
@@ -108,70 +132,83 @@
         </svg>
       </div>
       <div class="upload-title">Upload a shingle photo</div>
-      <div class="upload-sub">JPG, PNG, or HEIC · Google Vision + AI identifies it automatically</div>
+      <div class="upload-sub">JPG, PNG, or HEIC · AI analyzes and gives you top 3 matches</div>
     </label>
     <input type="file" id="fileInput" accept="image/*,.heic,.heif" style="display:none">
+    <div style="margin-top: 4px;">
+      <div class="hint-label">Know the brand or anything about it? (optional — helps accuracy)</div>
+      <div class="hint-row">
+        <input type="text" class="hint-input" id="hintInput" placeholder="e.g. GAF, dark grey, installed around 2015…" />
+      </div>
+    </div>
     <div id="upErr" class="error-box" style="display:none"></div>
   </div>
 
+  <!-- ANALYZING -->
   <div id="sLoading" class="screen">
     <div class="loading-card">
       <div class="spinner"></div>
-      <div class="loading-label" id="loadingLabel">Analyzing photo…</div>
-      <div class="loading-sub" id="loadingSub">This takes about 5 seconds</div>
-      <div class="progress-steps">
-        <div class="progress-step" id="step1">
-          <div class="step-icon">1</div> Sending to Google Vision API
-        </div>
-        <div class="progress-step" id="step2">
-          <div class="step-icon">2</div> Identifying shingle from web matches
-        </div>
-        <div class="progress-step" id="step3">
-          <div class="step-icon">3</div> Researching specs &amp; availability
-        </div>
-      </div>
+      <div class="loading-label">Analyzing your shingle…</div>
+      <div class="loading-sub">Examining texture, shadow lines, granule pattern, and tab style</div>
     </div>
   </div>
 
+  <!-- CANDIDATES -->
+  <div id="sCandidates" class="screen">
+    <div class="candidates-header">
+      <img id="candThumb" class="candidates-thumb" src="" alt="shingle">
+      <div class="candidates-intro">
+        <h2>Top 3 matches found</h2>
+        <p>Select the one that looks right — we'll pull the full specs, availability, and alternatives instantly.</p>
+      </div>
+    </div>
+    <div id="candidatesList"></div>
+    <div class="none-of-these">None of these look right? <a id="tryAgainLink">Try again with a closer photo</a> or <a id="addHintLink">add a brand hint</a></div>
+    <div id="candErr" class="error-box" style="display:none"></div>
+  </div>
+
+  <!-- SPECS LOADING -->
+  <div id="sSpecsLoading" class="screen">
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <div class="loading-label">Pulling full specs…</div>
+      <div class="loading-sub">Checking availability, warranty, pricing, and alternatives</div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
   <div id="sResults" class="screen">
     <div class="result-header">
       <div style="flex:1">
         <div class="r-name" id="rName"></div>
         <div class="r-mfr" id="rMfr"></div>
         <div class="conf-row">
-          <span class="conf-label">Confidence</span>
+          <span class="conf-label">Data confidence</span>
           <div class="conf-track"><div class="conf-fill" id="confFill"></div></div>
           <span class="conf-pct" id="confPct"></span>
         </div>
       </div>
       <div id="statusBadge" class="status-badge"></div>
     </div>
-    <div class="identified-from" id="identifiedFrom" style="display:none">
-      <strong>Identified via:</strong> <span id="identifiedFromText"></span>
-    </div>
     <div class="info-grid" id="infoGrid"></div>
     <div class="notes-card" id="notesCard" style="display:none"><h4>Field Notes</h4><p id="notesText"></p></div>
     <div class="alt-card" id="altCard" style="display:none"><h4>Compatible Alternatives</h4><div id="altList"></div></div>
-    <button class="btn-ghost" id="resetBtn">← Analyze another shingle</button>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn-ghost" id="backToCandBtn">← Back to matches</button>
+      <button class="btn-ghost" id="resetBtn">Start over</button>
+    </div>
   </div>
 
 </main>
 <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
 <script>
 let b64 = null;
+let previewUrl = null;
+let candidates = [];
 
 function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-}
-
-function setStep(n) {
-  [1,2,3].forEach(i => {
-    const el = document.getElementById('step' + i);
-    el.classList.remove('done','active');
-    if (i < n) { el.classList.add('done'); el.querySelector('.step-icon').textContent = '✓'; }
-    else if (i === n) { el.classList.add('active'); }
-  });
 }
 
 async function loadFile(file) {
@@ -203,50 +240,29 @@ async function loadFile(file) {
       const cv = document.createElement('canvas');
       cv.width = w; cv.height = h;
       cv.getContext('2d').drawImage(img, 0, 0, w, h);
-      b64 = cv.toDataURL('image/jpeg', 0.85).split(',')[1];
-      runPipeline();
+      previewUrl = cv.toDataURL('image/jpeg', 0.85);
+      b64 = previewUrl.split(',')[1];
+      analyzePhoto();
     };
     img.src = ev.target.result;
   };
   reader.readAsDataURL(blob);
 }
 
-async function runPipeline() {
+async function analyzePhoto() {
   show('sLoading');
-  setStep(1);
-
+  const hint = document.getElementById('hintInput').value.trim();
   try {
-    // STEP 1: Google Vision
-    document.getElementById('loadingLabel').textContent = 'Scanning with Google Vision…';
-    document.getElementById('loadingSub').textContent = 'Finding web matches for your shingle';
-    const visionRes = await fetch('/api/identify', {
+    const res = await fetch('/api/identify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mode: 'vision', image: b64 })
+      body: JSON.stringify({ mode: 'visual', image: b64, hint })
     });
-    const visionData = await visionRes.json();
-    if (visionData.error) throw new Error('Vision API: ' + visionData.error.message);
-
-    // STEP 2: Claude research
-    setStep(2);
-    document.getElementById('loadingLabel').textContent = 'Identifying shingle…';
-    document.getElementById('loadingSub').textContent = 'Matching against manufacturer database';
-    await new Promise(r => setTimeout(r, 400));
-
-    setStep(3);
-    document.getElementById('loadingLabel').textContent = 'Pulling full specs…';
-    document.getElementById('loadingSub').textContent = 'Checking availability, warranty, and alternatives';
-
-    const claudeRes = await fetch('/api/identify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mode: 'research', shingleName: visionData })
-    });
-    const result = await claudeRes.json();
-    if (result.error) throw new Error('Research: ' + result.error.message);
-
-    render(result);
-
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    if (!Array.isArray(data) || data.length === 0) throw new Error('No candidates returned');
+    candidates = data;
+    renderCandidates();
   } catch(e) {
     show('sUpload');
     document.getElementById('upErr').textContent = 'Error: ' + e.message;
@@ -254,26 +270,74 @@ async function runPipeline() {
   }
 }
 
-document.getElementById('fileInput').addEventListener('change', function() { if(this.files[0]) loadFile(this.files[0]); this.value=''; });
-document.getElementById('resetBtn').addEventListener('click', () => { b64 = null; show('sUpload'); });
+function renderCandidates() {
+  document.getElementById('candThumb').src = previewUrl;
+  const list = document.getElementById('candidatesList');
+  list.innerHTML = '';
+  candidates.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'candidate-card' + (c.rank === 1 ? ' rank1' : '');
+    const rankLabel = c.rank === 1 ? '🥇 Best match' : c.rank === 2 ? '2nd most likely' : '3rd most likely';
+    card.innerHTML = `
+      <div class="cand-swatch" style="background:${c.colorHex||'#888'}"></div>
+      <div class="cand-body">
+        <div class="cand-rank">${rankLabel}</div>
+        <div class="cand-name">${c.productName}</div>
+        <div class="cand-mfr">${c.manufacturer} · ${c.colorStyle}</div>
+        <div class="cand-reasoning">${c.visualReasoning}</div>
+      </div>
+      <div class="cand-right">
+        <div>
+          <div class="cand-conf">${c.confidence}% match</div>
+          <div class="cand-conf-bar"><div class="cand-conf-fill" style="width:${c.confidence}%"></div></div>
+        </div>
+        <button class="cand-select-btn" data-product="${c.productName} ${c.colorStyle} by ${c.manufacturer}">Select →</button>
+      </div>`;
+    list.appendChild(card);
+  });
 
-function render(r) {
+  list.querySelectorAll('.cand-select-btn').forEach(btn => {
+    btn.addEventListener('click', () => fetchSpecs(btn.dataset.product));
+  });
+
+  document.getElementById('candErr').style.display = 'none';
+  show('sCandidates');
+}
+
+async function fetchSpecs(productName) {
+  show('sSpecsLoading');
+  try {
+    const res = await fetch('/api/identify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode: 'specs', productName })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    renderResults(data);
+  } catch(e) {
+    show('sCandidates');
+    document.getElementById('candErr').textContent = 'Error loading specs: ' + e.message;
+    document.getElementById('candErr').style.display = 'block';
+  }
+}
+
+document.getElementById('fileInput').addEventListener('change', function() { if(this.files[0]) loadFile(this.files[0]); this.value=''; });
+document.getElementById('resetBtn').addEventListener('click', () => { b64 = null; previewUrl = null; show('sUpload'); });
+document.getElementById('backToCandBtn').addEventListener('click', () => show('sCandidates'));
+document.getElementById('tryAgainLink').addEventListener('click', () => { b64 = null; previewUrl = null; show('sUpload'); });
+document.getElementById('addHintLink').addEventListener('click', () => { b64 = null; previewUrl = null; show('sUpload'); document.getElementById('hintInput').focus(); });
+
+function renderResults(r) {
   document.getElementById('rName').textContent = r.productName || 'Unknown';
   document.getElementById('rMfr').textContent = r.manufacturer || '';
   const conf = Math.min(100, Math.max(0, +r.confidence || 0));
   setTimeout(() => document.getElementById('confFill').style.width = conf + '%', 80);
   document.getElementById('confPct').textContent = conf + '%';
-
   const av = (r.availability || 'active').toLowerCase();
   const badge = document.getElementById('statusBadge');
   badge.className = 'status-badge ' + (av === 'discontinued' ? 'discontinued' : av === 'limited' ? 'limited' : 'active');
   badge.innerHTML = `<span class="status-dot"></span>${av === 'discontinued' ? 'Discontinued' : av === 'limited' ? 'Limited' : 'Available'}`;
-
-  if (r.identifiedFrom) {
-    document.getElementById('identifiedFromText').textContent = r.identifiedFrom;
-    document.getElementById('identifiedFrom').style.display = 'block';
-  } else document.getElementById('identifiedFrom').style.display = 'none';
-
   const grid = document.getElementById('infoGrid');
   grid.innerHTML = '';
   [
@@ -287,11 +351,9 @@ function render(r) {
     d.innerHTML = `<div class="info-label">${l}</div><div class="info-val">${v}</div>`;
     grid.appendChild(d);
   });
-
   const nc = document.getElementById('notesCard');
   if (r.fieldNotes) { document.getElementById('notesText').textContent = r.fieldNotes; nc.style.display = 'block'; }
   else nc.style.display = 'none';
-
   const ac = document.getElementById('altCard'), al = document.getElementById('altList');
   al.innerHTML = '';
   if (r.alternatives && r.alternatives.length) {
@@ -304,7 +366,6 @@ function render(r) {
     });
     ac.style.display = 'block';
   } else ac.style.display = 'none';
-
   show('sResults');
 }
 </script>

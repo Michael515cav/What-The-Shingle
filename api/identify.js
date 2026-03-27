@@ -4,53 +4,37 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const { image, mode, shingleName } = req.body;
+  const { image, hint, mode, productName } = req.body;
 
   try {
-    // STEP 1: Send to Google Vision API for web detection
-    if (mode === 'vision') {
-      const visionRes = await fetch(
-        `https://vision.googleapis.com/v1/images:annotate?key=${process.env.GOOGLE_VISION_API_KEY}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            requests: [{
-              image: { content: image },
-              features: [
-                { type: 'WEB_DETECTION', maxResults: 10 },
-                { type: 'LABEL_DETECTION', maxResults: 10 }
-              ]
-            }]
-          })
-        }
-      );
-      const visionData = await visionRes.json();
-      if (visionData.error) throw new Error(visionData.error.message);
-      const web = visionData.responses?.[0]?.webDetection || {};
-      const labels = visionData.responses?.[0]?.labelAnnotations || [];
+    // MODE: visual — send image to Claude, get top 3 candidates
+    if (mode === 'visual') {
+      const sys = `You are the world's foremost expert on roofing shingles with 30+ years of experience identifying every product ever manufactured. You have memorized every shingle product line, color, texture pattern, shadow line, granule blend, cutout style, and tab shape from GAF, Owens Corning, CertainTeed, Tamko, IKO, Atlas, Malarkey, and all other manufacturers.
 
-      // Extract the most useful signals
-      const bestGuesses = (web.bestGuessLabels || []).map(g => g.label);
-      const webEntities = (web.webEntities || [])
-        .filter(e => e.score > 0.3 && e.description)
-        .map(e => e.description);
-      const pagesWithImage = (web.pagesWithMatchingImages || [])
-        .slice(0, 5)
-        .map(p => p.pageTitle || p.url);
-      const labelDesc = labels.slice(0, 8).map(l => l.description);
+Analyze the photo carefully. Examine: tab style, shadow line shape and height, granule color and blend pattern, texture, laminate thickness, exposure, and any other distinguishing visual features.
 
-      return res.status(200).json({
-        bestGuesses,
-        webEntities,
-        pagesWithImage,
-        labels: labelDesc
-      });
-    }
+Return your TOP 3 most likely candidates ranked by confidence. Be honest — if the photo is unclear, say so and lower your confidence scores accordingly.
 
-    // STEP 2: Send Vision results to Claude for research
-    if (mode === 'research') {
-      const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
+${hint ? `The user says: "${hint}" — use this to narrow your candidates.` : ''}
+
+Respond ONLY with a raw JSON array of exactly 3 objects. No markdown, no backticks, no text before or after.
+
+Schema:
+[
+  {
+    "rank": 1,
+    "productName": string,
+    "manufacturer": string,
+    "colorStyle": string,
+    "confidence": number 0-100,
+    "visualReasoning": string (2 sentences max — what specific visual features point to this product),
+    "colorHex": string (approximate hex of the shingle color)
+  },
+  { rank 2... },
+  { rank 3... }
+]`;
+
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,10 +43,29 @@ export default async function handler(req, res) {
         },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
-          max_tokens: 1500,
-          system: `You are the world's foremost expert on roofing shingles — every product ever made by GAF, Owens Corning, CertainTeed, Tamko, IKO, Atlas, Malarkey, and all manufacturers. You have complete knowledge of every product line, color, spec, warranty, discontinuation history, and compatible alternative.
+          max_tokens: 1000,
+          system: sys,
+          messages: [{
+            role: 'user',
+            content: [
+              { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: image } },
+              { type: 'text', text: 'Analyze this shingle photo and return your top 3 candidates as a JSON array.' }
+            ]
+          }]
+        })
+      });
 
-You will receive signals from Google Vision's web detection about a shingle photo. Use ALL signals — best guess labels, web entities, matching page titles — to identify the most likely shingle product. Then return everything known about it.
+      const data = await response.json();
+      if (data.error) throw new Error(data.error.message);
+      const text = (data.content || []).map(b => b.text || '').join('').trim();
+      const m = text.match(/\[[\s\S]*\]/);
+      if (!m) throw new Error('No JSON array in response');
+      return res.status(200).json(JSON.parse(m[0]));
+    }
+
+    // MODE: specs — user selected a candidate, get full specs
+    if (mode === 'specs') {
+      const sys = `You are the world's foremost expert on roofing shingles. Return complete specs for the given product.
 
 Respond ONLY with a raw JSON object. No markdown, no backticks, no extra text.
 
@@ -84,29 +87,30 @@ Schema:
   "whereToBuy": string,
   "pricePerSquare": string or null,
   "confidence": number 0-100,
-  "identifiedFrom": string (brief explanation of what Vision signals led to this ID),
-  "fieldNotes": string (practical notes for a roofer: sourcing, install quirks, insurance relevance),
+  "fieldNotes": string,
   "alternatives": [{"productName": string, "manufacturer": string, "reason": string, "colorHex": string, "available": boolean}]
-}`,
-          messages: [{
-            role: 'user',
-            content: `Google Vision returned these signals from a shingle photo:
+}`;
 
-Best guess labels: ${JSON.stringify(shingleName.bestGuesses)}
-Web entities: ${JSON.stringify(shingleName.webEntities)}
-Matching page titles: ${JSON.stringify(shingleName.pagesWithImage)}
-Image labels: ${JSON.stringify(shingleName.labels)}
-
-Based on all of these signals, identify the shingle and return full details as JSON.`
-          }]
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': process.env.ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1200,
+          system: sys,
+          messages: [{ role: 'user', content: `Return full specs as JSON for: ${productName}` }]
         })
       });
 
-      const claudeData = await claudeRes.json();
-      if (claudeData.error) throw new Error(claudeData.error.message);
-      const text = (claudeData.content || []).map(b => b.text || '').join('').trim();
+      const data = await response.json();
+      if (data.error) throw new Error(data.error.message);
+      const text = (data.content || []).map(b => b.text || '').join('').trim();
       const m = text.match(/\{[\s\S]*\}/);
-      if (!m) throw new Error('No JSON in Claude response');
+      if (!m) throw new Error('No JSON in response');
       return res.status(200).json(JSON.parse(m[0]));
     }
 
