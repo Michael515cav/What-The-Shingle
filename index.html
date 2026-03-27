@@ -33,6 +33,16 @@
   .hint-input { flex: 1; padding: 11px 16px; border: 1px solid var(--cream-dark); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; color: var(--slate); background: var(--white); outline: none; transition: border-color 0.2s; }
   .hint-input:focus { border-color: var(--gold); }
   .hint-label { font-size: 0.78rem; color: var(--muted); margin-bottom: 6px; }
+  .tab-row { display: flex; gap: 6px; background: var(--white); border-radius: 10px; padding: 5px; border: 1px solid var(--cream-dark); width: fit-content; }
+  .tab-btn { display: inline-flex; align-items: center; gap: 7px; background: none; border: none; border-radius: 7px; padding: 9px 18px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500; color: var(--muted); cursor: pointer; transition: background 0.15s, color 0.15s; }
+  .tab-btn.active { background: var(--slate); color: var(--white); }
+  .tab-btn:not(.active):hover { background: var(--cream); color: var(--slate); }
+  .code-entry-card { background: var(--white); border: 1px solid var(--cream-dark); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; }
+  .code-icon { width: 52px; height: 52px; background: var(--cream); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+  .code-textarea { width: 100%; min-height: 110px; padding: 12px 14px; border: 1px solid var(--cream-dark); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--slate); background: var(--cream); outline: none; resize: vertical; transition: border-color 0.2s; line-height: 1.6; }
+  .code-textarea:focus { border-color: var(--gold); background: var(--white); }
+  .code-explained { background: var(--slate-mid); border-radius: 9px; padding: 13px 16px; font-size: 0.8rem; color: #aab8c4; line-height: 1.55; }
+  .code-explained strong { color: var(--gold); }
 
   /* LOADING */
   .loading-card { background: var(--white); border-radius: 12px; padding: 52px 24px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
@@ -124,23 +134,54 @@
 
   <!-- UPLOAD -->
   <div id="sUpload" class="screen active">
-    <label id="uploadArea" for="fileInput">
-      <div class="upload-icon">
-        <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
-          <polyline points="21 15 16 10 5 21"/>
-        </svg>
-      </div>
-      <div class="upload-title">Upload a shingle photo</div>
-      <div class="upload-sub">JPG, PNG, or HEIC · AI analyzes and gives you top 3 matches</div>
-    </label>
-    <input type="file" id="fileInput" accept="image/*,.heic,.heif" style="display:none">
-    <div style="margin-top: 4px;">
-      <div class="hint-label">Know the brand or anything about it? (optional — helps accuracy)</div>
-      <div class="hint-row">
+
+    <!-- TAB SWITCHER -->
+    <div class="tab-row">
+      <button class="tab-btn active" id="tabPhoto" onclick="switchTab('photo')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Photo ID
+      </button>
+      <button class="tab-btn" id="tabCode" onclick="switchTab('code')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+        Code Lookup
+      </button>
+    </div>
+
+    <!-- PHOTO TAB -->
+    <div id="photoTab">
+      <label id="uploadArea" for="fileInput">
+        <div class="upload-icon">
+          <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+        <div class="upload-title">Upload a shingle photo</div>
+        <div class="upload-sub">JPG, PNG, or HEIC · AI analyzes and gives you top 3 matches</div>
+      </label>
+      <input type="file" id="fileInput" accept="image/*,.heic,.heif" style="display:none">
+      <div style="margin-top:4px;">
+        <div class="hint-label">Know the brand or anything about it? (optional — helps accuracy)</div>
         <input type="text" class="hint-input" id="hintInput" placeholder="e.g. GAF, dark grey, installed around 2015…" />
       </div>
     </div>
+
+    <!-- CODE TAB -->
+    <div id="codeTab" style="display:none;">
+      <div class="code-entry-card">
+        <div class="code-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        </div>
+        <div class="hint-label" style="margin-bottom:8px;">Enter any numbers, codes, or text from the shingle</div>
+        <textarea class="code-textarea" id="codeInput" placeholder="e.g. TL2635 · 0321 · CHAR · 3127&#10;&#10;Check the back tab, nail strip, or any printed markings on the shingle surface. Enter exactly what you see."></textarea>
+        <div class="hint-label" style="margin-top:8px;">Common locations: back of shingle tab · nail line strip · bundle wrapper</div>
+        <button class="btn-gold" id="codeLookupBtn" style="margin-top:14px;width:100%;justify-content:center;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Look Up Shingle
+        </button>
+      </div>
+    </div>
+
     <div id="upErr" class="error-box" style="display:none"></div>
   </div>
 
@@ -322,7 +363,35 @@ async function fetchSpecs(productName) {
   }
 }
 
-document.getElementById('fileInput').addEventListener('change', function() { if(this.files[0]) loadFile(this.files[0]); this.value=''; });
+function switchTab(tab) {
+  document.getElementById('tabPhoto').classList.toggle('active', tab === 'photo');
+  document.getElementById('tabCode').classList.toggle('active', tab === 'code');
+  document.getElementById('photoTab').style.display = tab === 'photo' ? 'block' : 'none';
+  document.getElementById('codeTab').style.display = tab === 'code' ? 'block' : 'none';
+}
+
+document.getElementById('codeLookupBtn').addEventListener('click', async () => {
+  const code = document.getElementById('codeInput').value.trim();
+  if (!code) { document.getElementById('upErr').textContent = 'Please enter the code or numbers from your shingle.'; document.getElementById('upErr').style.display = 'block'; return; }
+  document.getElementById('upErr').style.display = 'none';
+  show('sSpecsLoading');
+  try {
+    const res = await fetch('/api/identify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode: 'code', code })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    renderResults(data);
+  } catch(e) {
+    show('sUpload');
+    document.getElementById('upErr').textContent = 'Error: ' + e.message;
+    document.getElementById('upErr').style.display = 'block';
+  }
+});
+
+
 document.getElementById('resetBtn').addEventListener('click', () => { b64 = null; previewUrl = null; show('sUpload'); });
 document.getElementById('backToCandBtn').addEventListener('click', () => show('sCandidates'));
 document.getElementById('tryAgainLink').addEventListener('click', () => { b64 = null; previewUrl = null; show('sUpload'); });
@@ -338,6 +407,12 @@ function renderResults(r) {
   const badge = document.getElementById('statusBadge');
   badge.className = 'status-badge ' + (av === 'discontinued' ? 'discontinued' : av === 'limited' ? 'limited' : 'active');
   badge.innerHTML = `<span class="status-dot"></span>${av === 'discontinued' ? 'Discontinued' : av === 'limited' ? 'Limited' : 'Available'}`;
+
+  // Show code explanation if present
+  let codeDiv = document.getElementById('codeExplainedDiv');
+  if (!codeDiv) { codeDiv = document.createElement('div'); codeDiv.id = 'codeExplainedDiv'; codeDiv.className = 'code-explained'; document.getElementById('sResults').insertBefore(codeDiv, document.getElementById('infoGrid')); }
+  if (r.codeExplained) { codeDiv.innerHTML = `<strong>Code breakdown:</strong> ${r.codeExplained}`; codeDiv.style.display = 'block'; }
+  else codeDiv.style.display = 'none';
   const grid = document.getElementById('infoGrid');
   grid.innerHTML = '';
   [

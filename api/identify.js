@@ -114,6 +114,62 @@ Schema:
       return res.status(200).json(JSON.parse(m[0]));
     }
 
+    // MODE: code — look up by shingle code/number printed on the shingle
+    if (mode === 'code') {
+      const sys = `You are the world's foremost expert on roofing shingles. Roofers often find codes, numbers, or text printed on the back tab or surface of shingles — these can be color codes, batch numbers, product codes, UPC numbers, or style names.
+
+The user will give you whatever text/numbers they found on the shingle. Identify the exact product from this and return full specs.
+
+If you cannot identify the exact product from the code, make your best match and lower the confidence score accordingly.
+
+Respond ONLY with a raw JSON object. No markdown, no backticks, no extra text.
+
+Schema:
+{
+  "productName": string,
+  "manufacturer": string,
+  "colorStyle": string,
+  "shingleType": string,
+  "material": string,
+  "dimensions": string or null,
+  "warrantyOriginal": string or null,
+  "weightPerSquare": string or null,
+  "windRating": string or null,
+  "fireRating": string or null,
+  "availability": "active" or "discontinued" or "limited",
+  "discontinuedYear": string or null,
+  "replacedBy": string or null,
+  "whereToBuy": string,
+  "pricePerSquare": string or null,
+  "confidence": number 0-100,
+  "codeExplained": string (explain what the code means — what each part identifies),
+  "fieldNotes": string,
+  "alternatives": [{"productName": string, "manufacturer": string, "reason": string, "colorHex": string, "available": boolean}]
+}`;
+
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': process.env.ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1200,
+          system: sys,
+          messages: [{ role: 'user', content: `Identify this shingle from the code/text found on it and return full specs as JSON:\n\n"${req.body.code}"` }]
+        })
+      });
+
+      const data = await response.json();
+      if (data.error) throw new Error(data.error.message);
+      const text = (data.content || []).map(b => b.text || '').join('').trim();
+      const m = text.match(/\{[\s\S]*\}/);
+      if (!m) throw new Error('No JSON in response');
+      return res.status(200).json(JSON.parse(m[0]));
+    }
+
     res.status(400).json({ error: { message: 'Invalid mode' } });
 
   } catch(e) {
