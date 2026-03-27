@@ -1,0 +1,5 @@
+{
+  "functions": {
+    "api/identify.js": { "memory": 256, "maxDuration": 30 }
+  }
+}
